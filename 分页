@@ -1,0 +1,69 @@
+<?php 
+
+class Page{
+	//信息数
+	private $total_rows = 100;
+	//每页的个数
+	private $pagesize = 3;
+	//当前页数
+	private $num = 3;
+	//跳转地址
+	private $url='';
+	private $keyword ='';
+	public function __set($p,$v){
+		if (property_exists($this,$p)) {
+			$this->$p = $v;
+		}
+	}
+	public function __get($p){
+		if (property_exists($this,$p)) {
+			return $this->$p;
+		}
+	}
+	public function create(){
+		//首页
+		$firet = 1;
+		$url = $this->url . '?page=';
+		if ($this->keyword !='') {
+			$url = $this->url . "?keyword=$this->keyword&page=";
+		}
+		$first_active = $this->num ==1 ? 'active':'';
+		$ul = <<<HTML
+		<ul class="pagination">
+			<li class="$first_active"><a href="$url$firet">首页</a></li>
+HTML;
+		//中间部分
+		
+		$count = ceil($this->total_rows/$this->num);
+           for ($i=$this->num-3; $i <$this->num+3 ; $i++) { 
+           $active = $this->num == $i ? 'active':'';
+           	if ($i<2 || $i>$count-1) {
+           		continue;
+           	}
+           	$ul .= <<<HTML
+		
+			<li class="$active"><a href="$url$i">$i</a></li>
+HTML;
+           }
+		//结尾
+		$list_active = $this->num ==$count ? 'active':'';
+		$ul .=<<<HTML
+		   <li class="$list_active"><a href="$url$count">尾页</a></li>
+	    </ul>	
+HTML;
+		return $ul;
+	}
+}
+
+$page = new Page();
+$page->create();
+
+
+
+
+
+
+
+
+
+ ?>
